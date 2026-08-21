@@ -89,6 +89,14 @@
   .diag-card p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink);}
   .diag-card .region-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
   .diag-card .region-tag{background:var(--red-soft);color:var(--red);font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;}
+
+  .bars{display:flex; align-items:flex-end; gap:14px; padding:8px 4px 0;}
+  .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; position:relative;}
+  .bar-col .col-fill{width:100%; max-width:70px; margin:0 auto; border-radius:6px 6px 3px 3px; background:linear-gradient(180deg, var(--red) 0%, #E8A49C 100%); transition:opacity .15s;}
+  .bar-col.improving .col-fill{background:linear-gradient(180deg, var(--green) 0%, #9FCAA8 100%);}
+  .bar-col:hover .col-fill{opacity:.8;}
+  .bar-col .col-label{font-size:10.5px; color:var(--ink-soft); margin-top:7px; text-align:center; line-height:1.3;}
+  .bar-col .col-val{font-size:11.5px; color:var(--navy-deep); font-weight:700; margin-bottom:5px;}
   .ratio-card{background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);border-radius:14px;padding:20px 22px;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border-top:4px solid var(--gold);}
   .ratio-card .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold-soft);font-weight:700;}
   .ratio-card .val{font-size:36px;font-weight:800;margin:8px 0 2px;}
@@ -116,7 +124,7 @@
   <header class="top">
     <div class="eyebrow">BPP · Commercial Carrier · War Room</div>
     <h1>Risco IMILE — Da Identificação à Causa Raiz</h1>
-    <p>Storytelling da investigação conjunta CC, CX e transportadora sobre o pico de risco BPP no carrier IMILE — de 10/08 a 17/08/2026.</p>
+    <p>Storytelling da investigação conjunta CCO, LP, CC, CX e transportadora sobre o pico de risco BPP no carrier IMILE — de 10/08 a 17/08/2026.</p>
   </header>
 
   <div class="divider"></div>
@@ -254,6 +262,12 @@
       </div>
     </div>
 
+    <div class="diag-card" style="border-top-color:var(--purple);margin-bottom:16px;">
+      <h4 style="margin:0 0 2px;font-size:12.5px;color:var(--navy-deep);text-transform:uppercase;letter-spacing:.04em;">📉 Evolução do GMV em Risco</h4>
+      <p style="font-size:12px;color:var(--ink-soft);margin:0 0 14px;">Do diagnóstico inicial ao acompanhamento diário pós-ação</p>
+      <div class="bars" id="impact-chart" style="height:130px;"></div>
+    </div>
+
     <div class="action-grid">
       <div class="action-card done">
         <span class="badge">Concluído</span>
@@ -359,6 +373,22 @@
   <footer>War Room Risco IMILE · BPP Commercial Carrier · Governança IC · 10–21/08/2026</footer>
 </div>
 
+<script>
+const impactPoints = [
+  {label:"10/08 · War Room", gmv:482.9, improving:false},
+  {label:"19/08 · Pós-Reenvio", gmv:218.0, improving:true},
+  {label:"20/08", gmv:220.0, improving:true},
+  {label:"21/08 · Hoje", gmv:218.76, improving:true},
+];
+const maxGmv = Math.max(...impactPoints.map(p => p.gmv));
+document.getElementById('impact-chart').innerHTML = impactPoints.map(p => `
+  <div class="bar-col ${p.improving ? 'improving' : ''}">
+    <div class="col-val">US$ ${p.gmv.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})}K</div>
+    <div class="col-fill" style="height:${Math.max(10, p.gmv/maxGmv*95)}px;"></div>
+    <div class="col-label">${p.label}</div>
+  </div>
+`).join('');
+</script>
 <script>
 const dailyData = [
   {sub:"delayed", ids20:1744, ids21:1117, gmv20:89.3, gmv21:69.4, dgmv:-19.9},
